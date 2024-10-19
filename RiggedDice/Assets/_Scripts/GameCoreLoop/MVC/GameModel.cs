@@ -16,12 +16,18 @@ namespace DiceGame.MVC
         private int diceTotal = 0;
         private int[] selectedNumbers = new int[3];
         private int[] dices = new int[3];
+        private bool isFirstRiggedDiceComplete;
+        private bool isSecondRiggedDiceComplete;
+        private bool isThirdRiggedDiceComplete;
 
         public int[] SelectedNumbers { get => selectedNumbers; set => selectedNumbers = value; }
+        public int[] Dices { get => dices; set => dices = value; }
         public int TotalSum { get => totalSum; set => totalSum = value; }
         public int RollCount { get => rollCount; set => rollCount = value; }
         public int DiceTotal { get => diceTotal; set => diceTotal = value; }
-        public int[] Dices { get => dices; set => dices = value; }
+        public bool IsFirstRiggedDiceComplete { get => isFirstRiggedDiceComplete; set => isFirstRiggedDiceComplete = value; }
+        public bool IsSecondRiggedDiceComplete { get => isSecondRiggedDiceComplete; set => isSecondRiggedDiceComplete = value; }
+        public bool IsThirdRiggedDiceComplete { get => isThirdRiggedDiceComplete; set => isThirdRiggedDiceComplete = value; }
 
         public void CalculateTotalSum()
         {
