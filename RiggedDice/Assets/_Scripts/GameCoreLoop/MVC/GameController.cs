@@ -12,61 +12,45 @@ namespace DiceGame.MVC
     {
         [Header("MVC References")]
         [SerializeField] private GameModel gameModel;
-
-        [Header("Text References")]
-        [SerializeField] private TextMeshProUGUI totalSumText;
-        [SerializeField] private TextMeshProUGUI throwCountText;
-        [SerializeField] private TextMeshProUGUI diceTotalText;
-        [SerializeField] private TextMeshProUGUI[] dicesTexts;
+        [SerializeField] private GameView  gameView;
         
         private void OnEnable()
         {
-            EventManager.OnTotalSumChange += OnTotalSumChange;   
-            EventManager.OnThrowCountChange += OnThrowCountChange;
-            EventManager.OnDiceTotalChange += OnDiceTotalChange;
+            EventManager.OnRollDice += RollDice;
         }
 
         private void OnDisable()
         {
-            EventManager.OnTotalSumChange -= OnTotalSumChange;
-            EventManager.OnThrowCountChange -= OnThrowCountChange;
-            EventManager.OnDiceTotalChange -= OnDiceTotalChange;
+            EventManager.OnRollDice -= RollDice;
         }
 
-        private void OnTotalSumChange()
+        private void UpdateView()
         {
-            if (gameModel == null) return;
-            UpdateView(totalSumText, gameModel.TotalSum);
-        }
-        private void OnThrowCountChange() 
-        {
-            if (gameModel == null) return;
-            UpdateView(throwCountText, gameModel.ThrowCount);
-        }
-        private void OnDiceTotalChange()
-        {
-            if (gameModel == null) return;
-            UpdateView(diceTotalText, gameModel.DiceTotal);
+            gameView.UpdateDiceTotalText(gameModel.DiceTotal);
+            gameView.UpdateRollCountText(gameModel.RollCount);
+            gameView.UpdateTotalSumText(gameModel.TotalSum);
+            gameView.UpdateDiceTexts(gameModel.Dices);
         }
 
-        private void UpdateView(TextMeshProUGUI changedText,int number)
-        {
-            changedText.text = number.ToString();
-        }
+      
 
         public void RollDice()
         {
-            Debug.Log("Dice Rolling..");
-
-            for (int i = 0; i < 3; i++)
+            if(gameModel.CanRoll())
             {
-                gameModel.Dices[i] = Random.Range(1, 6);
-                UpdateView(dicesTexts[i], gameModel.Dices[i]);
-            }
+                Debug.Log("Dice Rolling..");
 
-            gameModel?.OnDiceTotal(gameModel.Dices[0], gameModel.Dices[1], gameModel.Dices[2]);
-            gameModel?.TotalSumIncrease(gameModel.DiceTotal);
-            gameModel?.ThrowCountIncrease();
+                gameModel.RollCountIncrease();
+
+                for (int i = 0; i < 3; i++)
+                {
+                    gameModel.Dices[i] = Random.Range(1, 7);
+                }
+
+                gameModel.CalculateDiceTotal(gameModel.Dices[0], gameModel.Dices[1], gameModel.Dices[2]);
+                gameModel.CalculateTotalSum();
+                UpdateView();
+            }
         }
     }
 }

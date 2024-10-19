@@ -8,8 +8,6 @@ namespace DiceGame.Events
 {
     public static class EventManager 
     {
-        public static UnityAction OnTotalSumChange;
-        public static UnityAction OnThrowCountChange;
-        public static UnityAction OnDiceTotalChange;
+        public static UnityAction OnRollDice;
     }
 }
