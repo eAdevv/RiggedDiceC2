@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using DiceGame.Events;
 using DiceGame.Singleton;
 
 namespace DiceGame.MVC
@@ -12,25 +13,32 @@ namespace DiceGame.MVC
         private int throwCount = 0;
         private int diceTotal = 0;
         private int[] selectedNumbers = new int[3];
+        private int[] dices = new int[3];
 
         public int[] SelectedNumbers { get => selectedNumbers; set => selectedNumbers = value; }
         public int TotalSum { get => totalSum; set => totalSum = value; }
         public int ThrowCount { get => throwCount; set => throwCount = value; }
         public int DiceTotal { get => diceTotal; set => diceTotal = value; }
+        public int[] Dices { get => dices; set => dices = value; }
 
-        private void OnTotalSumIncrease(int diceTotal)
+        public void TotalSumIncrease(int diceTotal)
         {
             totalSum += diceTotal;
+            EventManager.OnTotalSumChange?.Invoke();
         }
 
-        private void OnThrowCountIncrease()
+        public void ThrowCountIncrease()
         {
             throwCount += 1;
+            EventManager.OnThrowCountChange?.Invoke();
         }
 
-        private void OnDiceTotal(int number1, int number2, int number3)
+        public void OnDiceTotal(int dice1, int dice2, int dice3)
         {
-            diceTotal = number1 + number2 + number3;
+            diceTotal = dice1 + dice2 + dice3;
+            EventManager.OnDiceTotalChange?.Invoke();
         }
+
+       
     }
 }

@@ -1,21 +1,25 @@
+using DiceGame.MVC;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DiceGame
 {
     public class GameView : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+        [Header("MVC References")]
+        [SerializeField] private GameController gameController;
 
-        // Update is called once per frame
-        void Update()
+        [Header("UI References")]
+        [SerializeField] private Button throwButton;
+
+        private void Awake()
         {
-        
+            throwButton.onClick.AddListener(() =>
+            {
+                gameController?.RollDice();
+            });
         }
     }
 }
