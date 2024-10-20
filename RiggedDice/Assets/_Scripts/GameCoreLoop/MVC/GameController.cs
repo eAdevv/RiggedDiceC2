@@ -121,33 +121,27 @@ namespace DiceGame.MVC
                 gameModel.Dices[i] = Random.Range(1, 7);
             }
         }
-
         private void OnRiggedDice(int targetNumber)
         {
-            if (targetNumber > 7 && targetNumber < 13)
+            if (targetNumber <= 7)
             {
-                Debug.Log("Rigged Dice..");
-                gameModel.Dices[0] = Random.Range(1, 7);
-
-                if (targetNumber - gameModel.Dices[0] <= 6) 
-                    gameModel.Dices[1] = Random.Range(1, targetNumber - gameModel.Dices[0]);
-                else 
-                    gameModel.Dices[1] = Random.Range(1, 7);         
-            }
-            else if (targetNumber > 12)
-            {
-                Debug.Log("Rigged Dice..");
-                gameModel.Dices[0] = Random.Range((6 - targetNumber % 6), 7);
-                gameModel.Dices[1] = Random.Range((6 - targetNumber % 6), 7);
+                Debug.Log(targetNumber + "Rigged");
+                gameModel.Dices[0] = Random.Range(1, targetNumber - 1);
+                gameModel.Dices[1] = Random.Range(1, targetNumber - gameModel.Dices[0]);
+                gameModel.Dices[2] = targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]);
             }
             else
             {
-                Debug.Log("Rigged Dice..");
-                gameModel.Dices[0] = Random.Range(1, targetNumber - 1);
-                gameModel.Dices[1] = Random.Range(1, targetNumber - gameModel.Dices[0]);
-            }
+                Debug.Log(targetNumber + "Rigged");
+                do
+                {
+                    gameModel.Dices[0] = Random.Range(1, 7);
+                    gameModel.Dices[1] = Random.Range(1, 7);
 
-            gameModel.Dices[2] = targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]);
+                } while (targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]) < 1 || targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]) > 6);
+
+                gameModel.Dices[2] = targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]);
+            }
         }
     }
 }
