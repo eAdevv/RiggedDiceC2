@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using DiceGame.MVC;
+using DiceGame.Events;
 
 namespace DiceGame.NumberSelection
 {
@@ -12,9 +10,13 @@ namespace DiceGame.NumberSelection
         [SerializeField] private ButtonNumberHandler[] numberHandlers;
         [SerializeField] private TextMeshProUGUI[] numberTexts;
         [SerializeField] private Button gameStartButton;
-        int numberSelectCount = 0;
         [SerializeField] private GameObject numberSelectionPanel;
         [SerializeField] private GameObject gamePanel;
+
+        private int numberSelectCount = 0;
+        private int[] numbers = new int[3];
+
+      
         private void Start()
         {
             numberSelectionPanel.SetActive(true);
@@ -31,8 +33,9 @@ namespace DiceGame.NumberSelection
             if(numberSelectCount <= 2)
             {
                 numberTexts[numberSelectCount].text = numberHandler.Number.ToString();
-                GameModel.Instance.SelectedNumbers[numberSelectCount] = numberHandler.Number;
+                numbers[numberSelectCount] = numberHandler.Number;
                 numberSelectCount++;
+                if(numberSelectCount > 2) gameStartButton.interactable = true;
             }
         }
 
@@ -40,6 +43,8 @@ namespace DiceGame.NumberSelection
         {
             numberSelectionPanel.SetActive(false);
             gamePanel.SetActive(true);
+            EventManager.OnNumbersAssigment?.Invoke(numbers);
+            EventManager.OnInitialize?.Invoke();
         }
 
       

@@ -1,12 +1,5 @@
-
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using DiceGame.Events;
-using TMPro;
-using System.Linq;
-using System.Net.Http.Headers;
 
 namespace DiceGame.MVC
 {
@@ -15,9 +8,6 @@ namespace DiceGame.MVC
         [Header("MVC References")]
         [SerializeField] private GameModel gameModel;
         [SerializeField] private GameView  gameView;
-
-        private int[] diceRollResults = new int[20];
-        private int remainingTotal = 200;
 
         private void OnEnable()
         {
@@ -29,19 +19,11 @@ namespace DiceGame.MVC
             EventManager.OnRollDice -= RollDice;
         }
 
-        private void UpdateView()
-        {
-            gameView.UpdateDiceTotalText(gameModel.DiceTotal);
-            gameView.UpdateRollCountText(gameModel.RollCount);
-            gameView.UpdateTotalSumText(gameModel.TotalSum);
-            gameView.UpdateDiceTexts(gameModel.Dices);
-        }
-
         public void RollDice()
         {
             if(gameModel.CanRoll())
             {
-                gameModel.RollCountIncrease();
+                gameModel.RollCount++;
 
                 var riggedDiceChance = Random.Range(1, 3);
 
@@ -69,19 +51,16 @@ namespace DiceGame.MVC
                             break;
 
                         default:
-                            RollRandomDices();
+                            RollRandomDices(gameModel.RemainRandomRollCount);
                             break;
                     }
                 }
 
-                gameModel.CalculateDiceTotal(gameModel.Dices[0], gameModel.Dices[1], gameModel.Dices[2]);
                 gameModel.CalculateTotalSum();
-                UpdateView();
-
+                gameView.UpdateTexts(gameModel.DiceTotal, gameModel.RollCount, gameModel.TotalSum, gameModel.Dices);
             }
         }
 
-       
         private void RiggedDiceChecker()
         {
             switch (gameModel.RollCount)
@@ -102,7 +81,7 @@ namespace DiceGame.MVC
                     break;
 
                 default:
-                    RollRandomDices();
+                    RollRandomDices(gameModel.RemainRandomRollCount);
                     break;
             }
         }
@@ -115,17 +94,32 @@ namespace DiceGame.MVC
                 return false;
         }
 
-
-        private void RollRandomDices()
+        private void RollRandomDices(int remainRandomRollCount)
         {
-            for (int i = 0; i < 3; i++)
-            {
-                gameModel.Dices[i] = Random.Range(1, 7);
-            }
+           if(remainRandomRollCount > 1)
+           {
+                do
+                {
+                    gameModel.Dices[0] = Random.Range(1, 7);
+                    gameModel.Dices[1] = Random.Range(1, 7);
+                    gameModel.Dices[2] = Random.Range(1, 7);
+
+                    gameModel.CalculateDiceTotal(gameModel.Dices[0], gameModel.Dices[1], gameModel.Dices[2]);
+
+                } while (RandomDicesRiggedSumChecker(remainRandomRollCount));
+
+                gameModel.RemainRandomRollCount -= 1;
+                gameModel.RemainTotal -= gameModel.DiceTotal;
+           }
+           else
+           {
+                OnRiggedDice(gameModel.RemainTotal);
+                gameModel.RemainRandomRollCount -= 1;
+                gameView.GameFnishUpdate();
+           }
         }
         private void OnRiggedDice(int targetNumber)
         {
-
             Debug.Log(gameModel.RollCount + ". Roll is Rigged.");
 
             int lastDice;
@@ -138,6 +132,16 @@ namespace DiceGame.MVC
             } while (lastDice < 1 || lastDice > 6);
 
             gameModel.Dices[2] = lastDice;
+            gameModel.CalculateDiceTotal(gameModel.Dices[0], gameModel.Dices[1], gameModel.Dices[2]);
         }
+
+        private bool RandomDicesRiggedSumChecker(int remainRandomRollCount)
+        {
+            return (remainRandomRollCount - 1 ) * 18 < (gameModel.RemainTotal - gameModel.DiceTotal) || (gameModel.RemainTotal - gameModel.DiceTotal) < (remainRandomRollCount - 1 )* 3;
+        }
+
+
+      
+
     }
 }
