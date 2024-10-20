@@ -9,16 +9,26 @@ namespace DiceGame.MVC
 {
     public class GameModel : MonoSingleton<GameModel>
     {
-        private const int MÖX_ROLL_COUNT = 20;
-
+        #region Datas
+        // Variables
+        private const int MAX_ROLL_COUNT = 20;
         private int totalSum = 0;
         private int rollCount = 0;
         private int diceTotal = 0;
+        private int toReachSum = 200;
+
+        // Arrays
         private int[] selectedNumbers = new int[3];
         private int[] dices = new int[3];
+
+        // Dice Condition Reference
         private bool isFirstRiggedDiceComplete;
         private bool isSecondRiggedDiceComplete;
         private bool isThirdRiggedDiceComplete;
+
+        #endregion
+
+        #region Getter Setter
 
         public int[] SelectedNumbers { get => selectedNumbers; set => selectedNumbers = value; }
         public int[] Dices { get => dices; set => dices = value; }
@@ -28,6 +38,9 @@ namespace DiceGame.MVC
         public bool IsFirstRiggedDiceComplete { get => isFirstRiggedDiceComplete; set => isFirstRiggedDiceComplete = value; }
         public bool IsSecondRiggedDiceComplete { get => isSecondRiggedDiceComplete; set => isSecondRiggedDiceComplete = value; }
         public bool IsThirdRiggedDiceComplete { get => isThirdRiggedDiceComplete; set => isThirdRiggedDiceComplete = value; }
+        public int ToReachSum { get => toReachSum; set => toReachSum = value; }
+
+        #endregion
 
         public void CalculateTotalSum()
         {
@@ -46,7 +59,7 @@ namespace DiceGame.MVC
 
         public bool CanRoll()
         {
-            return rollCount < MÖX_ROLL_COUNT;
+            return rollCount < MAX_ROLL_COUNT;
         }
 
        

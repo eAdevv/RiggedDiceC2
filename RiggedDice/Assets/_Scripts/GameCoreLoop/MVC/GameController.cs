@@ -15,6 +15,7 @@ namespace DiceGame.MVC
         [Header("MVC References")]
         [SerializeField] private GameModel gameModel;
         [SerializeField] private GameView  gameView;
+
         private void OnEnable()
         {
             EventManager.OnRollDice += RollDice;
@@ -37,25 +38,30 @@ namespace DiceGame.MVC
         {
             if(gameModel.CanRoll())
             {
-                gameModel.RollCountIncrease();            
+                gameModel.RollCountIncrease();
 
-                var riggedDiceChance = Random.Range(0, 2);
 
-                if (riggedDiceChance == 0)
+                var riggedDiceChance = Random.Range(1, 3);
+
+                if (riggedDiceChance == 1)
+                {
+                    RiggedDiceChecker(); 
+                }                            
+                else
                 {
                     switch (gameModel.RollCount)
                     {
-                        case int rollCount when isNumberInRange(rollCount, 1, 10) && !gameModel.IsFirstRiggedDiceComplete:
+                        case int rollCount when rollCount == 10 && !gameModel.IsFirstRiggedDiceComplete:
                             OnRiggedDice(gameModel.SelectedNumbers[0]);
                             gameModel.IsFirstRiggedDiceComplete = true;
                             break;
 
-                        case int rollCount when isNumberInRange(rollCount, 5, 15) && !gameModel.IsSecondRiggedDiceComplete:
+                        case int rollCount when rollCount == 15 && !gameModel.IsSecondRiggedDiceComplete:
                             OnRiggedDice(gameModel.SelectedNumbers[1]);
                             gameModel.IsSecondRiggedDiceComplete = true;
                             break;
 
-                        case int rollCount when isNumberInRange(rollCount, 10, 20) && !gameModel.IsThirdRiggedDiceComplete:
+                        case int rollCount when rollCount == 20 && !gameModel.IsThirdRiggedDiceComplete:
                             OnRiggedDice(gameModel.SelectedNumbers[2]);
                             gameModel.IsThirdRiggedDiceComplete = true;
                             break;
@@ -64,12 +70,7 @@ namespace DiceGame.MVC
                             RollRandomDices();
                             break;
                     }
-                }                            
-                else
-                {
-                    RollRandomDices();
                 }
-               
 
                 gameModel.CalculateDiceTotal(gameModel.Dices[0], gameModel.Dices[1], gameModel.Dices[2]);
                 gameModel.CalculateTotalSum();
@@ -78,13 +79,40 @@ namespace DiceGame.MVC
             }
         }
 
-        private bool isNumberInRange(int rollCount,int min,int max)
+       
+        private void RiggedDiceChecker()
+        {
+            switch (gameModel.RollCount)
+            {
+                case int rollCount when isNumberInRange(rollCount, 1, 10) && !gameModel.IsFirstRiggedDiceComplete:
+                    OnRiggedDice(gameModel.SelectedNumbers[0]);
+                    gameModel.IsFirstRiggedDiceComplete = true;
+                    break;
+
+                case int rollCount when isNumberInRange(rollCount, 5, 15) && !gameModel.IsSecondRiggedDiceComplete:
+                    OnRiggedDice(gameModel.SelectedNumbers[1]);
+                    gameModel.IsSecondRiggedDiceComplete = true;
+                    break;
+
+                case int rollCount when isNumberInRange(rollCount, 10, 20) && !gameModel.IsThirdRiggedDiceComplete:
+                    OnRiggedDice(gameModel.SelectedNumbers[2]);
+                    gameModel.IsThirdRiggedDiceComplete = true;
+                    break;
+
+                default:
+                    RollRandomDices();
+                    break;
+            }
+        }
+
+        private bool isNumberInRange(int rollCount, int min, int max)
         {
             if (rollCount >= min && rollCount <= max)
                 return true;
             else
                 return false;
         }
+
 
         private void RollRandomDices()
         {
@@ -96,23 +124,30 @@ namespace DiceGame.MVC
 
         private void OnRiggedDice(int targetNumber)
         {
-            if (targetNumber > 7)
+            if (targetNumber > 7 && targetNumber < 13)
             {
-                Debug.Log(targetNumber + " Rigged ");
-
+                Debug.Log("Rigged Dice..");
                 gameModel.Dices[0] = Random.Range(1, 7);
-                gameModel.Dices[1] = Random.Range(1, targetNumber - gameModel.Dices[0]);
-                gameModel.Dices[2] = targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]);              
+
+                if (targetNumber - gameModel.Dices[0] <= 6) 
+                    gameModel.Dices[1] = Random.Range(1, targetNumber - gameModel.Dices[0]);
+                else 
+                    gameModel.Dices[1] = Random.Range(1, 7);         
+            }
+            else if (targetNumber > 12)
+            {
+                Debug.Log("Rigged Dice..");
+                gameModel.Dices[0] = Random.Range((6 - targetNumber % 6), 7);
+                gameModel.Dices[1] = Random.Range((6 - targetNumber % 6), 7);
             }
             else
             {
-                Debug.Log(targetNumber + " Rigged ");
-
+                Debug.Log("Rigged Dice..");
                 gameModel.Dices[0] = Random.Range(1, targetNumber - 1);
                 gameModel.Dices[1] = Random.Range(1, targetNumber - gameModel.Dices[0]);
-                gameModel.Dices[2] = targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]);
             }
 
+            gameModel.Dices[2] = targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]);
         }
     }
 }
