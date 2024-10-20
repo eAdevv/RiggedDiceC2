@@ -16,6 +16,9 @@ namespace DiceGame.MVC
         [SerializeField] private GameModel gameModel;
         [SerializeField] private GameView  gameView;
 
+        private int[] diceRollResults = new int[20];
+        private int remainingTotal = 200;
+
         private void OnEnable()
         {
             EventManager.OnRollDice += RollDice;
@@ -39,7 +42,6 @@ namespace DiceGame.MVC
             if(gameModel.CanRoll())
             {
                 gameModel.RollCountIncrease();
-
 
                 var riggedDiceChance = Random.Range(1, 3);
 
@@ -123,25 +125,19 @@ namespace DiceGame.MVC
         }
         private void OnRiggedDice(int targetNumber)
         {
-            if (targetNumber <= 7)
-            {
-                Debug.Log(targetNumber + "Rigged");
-                gameModel.Dices[0] = Random.Range(1, targetNumber - 1);
-                gameModel.Dices[1] = Random.Range(1, targetNumber - gameModel.Dices[0]);
-                gameModel.Dices[2] = targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]);
-            }
-            else
-            {
-                Debug.Log(targetNumber + "Rigged");
-                do
-                {
-                    gameModel.Dices[0] = Random.Range(1, 7);
-                    gameModel.Dices[1] = Random.Range(1, 7);
 
-                } while (targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]) < 1 || targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]) > 6);
+            Debug.Log(gameModel.RollCount + ". Roll is Rigged.");
 
-                gameModel.Dices[2] = targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]);
-            }
+            int lastDice;
+            do
+            {
+                gameModel.Dices[0] = Random.Range(1, 7);
+                gameModel.Dices[1] = Random.Range(1, 7);
+                lastDice = targetNumber - (gameModel.Dices[0] + gameModel.Dices[1]);
+
+            } while (lastDice < 1 || lastDice > 6);
+
+            gameModel.Dices[2] = lastDice;
         }
     }
 }
