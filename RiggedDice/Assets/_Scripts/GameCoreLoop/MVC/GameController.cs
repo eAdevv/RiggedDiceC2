@@ -27,12 +27,12 @@ namespace DiceGame.MVC
             {
                 gameModel.RollCount++;
 
-                // Every roll of the dice has a 50% chance of being rigged.
-                var riggedDiceChance = Random.Range(1, 3);
+                // Every roll of the dice has a 33% chance of being rigged.
+                var riggedDiceChance = Random.Range(1, 4);
 
                 if (riggedDiceChance == 1)
                 {
-                    RiggedDiceChecker(); 
+                    RiggedDiceChecker();
                 }
                 // After the dice are rolled, the rollCount is checked to see if it is the end of the range.
                 else
@@ -90,6 +90,8 @@ namespace DiceGame.MVC
                     RollRandomDices(gameModel.RemainRandomRollCount);
                     break;
             }
+
+
         }
 
         private bool isNumberInRange(int rollCount, int min, int max)
@@ -127,6 +129,7 @@ namespace DiceGame.MVC
                 gameModel.RemainRandomRollCount -= 1;
                 gameView.GameFnishUpdate();
             }
+
         }
 
         // The basic logic of a rigged throw;
