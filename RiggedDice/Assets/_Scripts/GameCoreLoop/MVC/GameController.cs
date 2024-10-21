@@ -1,5 +1,6 @@
 using UnityEngine;
 using DiceGame.Events;
+using System.Collections;
 
 namespace DiceGame.MVC
 {
@@ -56,8 +57,9 @@ namespace DiceGame.MVC
                     }
                 }
 
-                gameModel.CalculateTotalSum();
                 gameView.UpdateTexts(gameModel.DiceTotal, gameModel.RollCount, gameModel.TotalSum, gameModel.Dices);
+                gameModel.CalculateTotalSum();
+                
             }
         }
 
@@ -96,8 +98,8 @@ namespace DiceGame.MVC
 
         private void RollRandomDices(int remainRandomRollCount)
         {
-           if(remainRandomRollCount > 1)
-           {
+            if (remainRandomRollCount > 1)
+            {
                 do
                 {
                     gameModel.Dices[0] = Random.Range(1, 7);
@@ -110,13 +112,13 @@ namespace DiceGame.MVC
 
                 gameModel.RemainRandomRollCount -= 1;
                 gameModel.RemainTotal -= gameModel.DiceTotal;
-           }
-           else
-           {
+            }
+            else
+            {
                 OnRiggedDice(gameModel.RemainTotal);
                 gameModel.RemainRandomRollCount -= 1;
                 gameView.GameFnishUpdate();
-           }
+            }
         }
         private void OnRiggedDice(int targetNumber)
         {
@@ -140,8 +142,6 @@ namespace DiceGame.MVC
             return (remainRandomRollCount - 1 ) * 18 < (gameModel.RemainTotal - gameModel.DiceTotal) || (gameModel.RemainTotal - gameModel.DiceTotal) < (remainRandomRollCount - 1 )* 3;
         }
 
-
-      
-
+       
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DiceGame.Events;
 using Unity.VisualScripting;
+using System.Collections;
 
 namespace DiceGame.MVC
 {
@@ -18,12 +19,13 @@ namespace DiceGame.MVC
         [SerializeField] private TextMeshProUGUI diceTotalText;
         [SerializeField] private TextMeshProUGUI[] dicesTexts;
 
+        public TextMeshProUGUI[] DicesTexts { get => dicesTexts; set => dicesTexts = value; }
 
         private void Awake()
         {
             rollButton.onClick.AddListener(() =>
             {
-                EventManager.OnRollDice?.Invoke();  
+                StartCoroutine(RollAnimation());
             });
         }
   
@@ -42,7 +44,22 @@ namespace DiceGame.MVC
                 dicesTexts[i].text = dices[i].ToString();
             }
         }
-        
+
+        private IEnumerator RollAnimation()
+        {
+            rollButton.interactable = false;
+            for (int i = 0; i < 3; i++)
+            {
+                DicesTexts[0].text = Random.Range(1, 7).ToString();
+                DicesTexts[1].text = Random.Range(1, 7).ToString();
+                DicesTexts[2].text = Random.Range(1, 7).ToString();
+                yield return new WaitForSeconds(0.1f);
+            }
+            rollButton.interactable = true;
+            EventManager.OnRollDice?.Invoke();
+
+        }
+
     }
 
 }
