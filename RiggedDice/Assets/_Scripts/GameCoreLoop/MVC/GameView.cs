@@ -9,6 +9,8 @@ namespace DiceGame.MVC
 {
     public class GameView : MonoBehaviour
     {
+        //////  The view part of the architecture for the MVC pattern //////
+        ///
         [Header("UI References")]
         [SerializeField] private Button rollButton;
         [SerializeField] private GameObject gameFnishPanel;
@@ -34,6 +36,8 @@ namespace DiceGame.MVC
             gameFnishPanel.SetActive(true);
             rollButton.interactable = false;
         }
+
+        // Texts are updated
         public void UpdateTexts(int diceTotal, int count , int sum, int[] dices)
         {
             totalSumText.text = sum.ToString();
@@ -45,6 +49,7 @@ namespace DiceGame.MVC
             }
         }
 
+        // Animation to be activated when the dice is rolled.
         private IEnumerator RollAnimation()
         {
             rollButton.interactable = false;
@@ -57,7 +62,6 @@ namespace DiceGame.MVC
             }
             rollButton.interactable = true;
             EventManager.OnRollDice?.Invoke();
-
         }
 
     }

@@ -5,6 +5,7 @@ namespace DiceGame.MVC
 {
     public class GameModel : MonoBehaviour
     {
+        ////// Where the data in the architecture for the MVC pattern is collected //////
         #region Datas
         // Variables
         private const int MAX_ROLL_COUNT = 20;
@@ -76,7 +77,7 @@ namespace DiceGame.MVC
                 numbersTotal += dice;
             }
 
-            remainTotal = MAX_SUM - numbersTotal;
+            remainTotal = MAX_SUM - numbersTotal; 
         }
 
         private void SelectedNumbersAssignment(int[] numbers)

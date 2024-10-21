@@ -21,6 +21,7 @@ namespace DiceGame.NumberSelection
         {
             numberSelectionPanel.SetActive(true);
 
+            
             foreach (var numberHandler in numberHandlers)
             {
                 numberHandler.GetComponent<Button>().onClick.AddListener(()=> GetNumber(numberHandler));
@@ -28,6 +29,8 @@ namespace DiceGame.NumberSelection
 
             gameStartButton.onClick.AddListener(GameStart);
         }
+        // Each button has one hand holding its own unique numbers.
+        // These numbers are kept after the button is pressed.
         private void GetNumber(ButtonNumberHandler numberHandler)
         {
             if(numberSelectCount <= 2)
@@ -43,6 +46,8 @@ namespace DiceGame.NumberSelection
         {
             numberSelectionPanel.SetActive(false);
             gamePanel.SetActive(true);
+
+            // // Initialization
             EventManager.OnNumbersAssigment?.Invoke(numbers);
             EventManager.OnInitialize?.Invoke();
         }
