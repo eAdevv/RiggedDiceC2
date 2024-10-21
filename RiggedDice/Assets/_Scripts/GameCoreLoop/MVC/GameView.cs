@@ -9,7 +9,7 @@ namespace DiceGame.MVC
 {
     public class GameView : MonoBehaviour
     {
-        //////  The view part of the architecture for the MVC pattern //////
+        //////  The VIEW part of the architecture for the MVC pattern //////
         ///
         [Header("UI References")]
         [SerializeField] private Button rollButton;

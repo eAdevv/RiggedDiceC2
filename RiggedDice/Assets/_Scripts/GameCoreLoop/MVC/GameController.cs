@@ -6,6 +6,8 @@ namespace DiceGame.MVC
 {
     public class GameController : MonoBehaviour
     {
+        //////  The CONTROLLER part of the architecture for the MVC pattern //////
+        ///
         [Header("MVC References")]
         [SerializeField] private GameModel gameModel;
         [SerializeField] private GameView  gameView;
@@ -58,9 +60,8 @@ namespace DiceGame.MVC
                     }
                 }
 
-                gameView.UpdateTexts(gameModel.DiceTotal, gameModel.RollCount, gameModel.TotalSum, gameModel.Dices);
                 gameModel.CalculateTotalSum();
-                
+                gameView.UpdateTexts(gameModel.DiceTotal, gameModel.RollCount, gameModel.TotalSum, gameModel.Dices);
             }
         }
 
